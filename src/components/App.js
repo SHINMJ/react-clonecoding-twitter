@@ -4,13 +4,14 @@ import { authService } from 'myFirebase'
 
 function App() {
   const [init, setInit] = useState(false)
-
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [user, setUser] = useState(null)
 
   useEffect(() => {
-    authService.onAuthStateChanged((user) => {
-      if (user) {
+    authService.onAuthStateChanged((userObj) => {
+      if (userObj) {
         setIsLoggedIn(true)
+        setUser(userObj)
       } else {
         setIsLoggedIn(false)
       }
@@ -20,7 +21,11 @@ function App() {
 
   return (
     <>
-      {init ? <AppRouter isLoggedIn={isLoggedIn} /> : 'initialize....'}
+      {init ? (
+        <AppRouter isLoggedIn={isLoggedIn} user={user} />
+      ) : (
+        'initialize....'
+      )}
       <footer>&copy; {new Date().getFullYear()} Nwitter</footer>
     </>
   )

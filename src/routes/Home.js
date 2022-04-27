@@ -1,30 +1,18 @@
 import { firestoreService } from 'myFirebase'
 import React, { useEffect, useState } from 'react'
 
-const Home = () => {
+const Home = ({ user }) => {
   const [nweet, setNweet] = useState('')
   const [nweets, setNweets] = useState([])
 
-  const getNweets = async () => {
-    try {
-      const dbNweets = await firestoreService.collection('nweets').get()
-
-      dbNweets.forEach((doc) => {
-        const nweetObj = {
-          data: doc.data(),
-          id: doc.id,
-        }
-        setNweets((prev) => [nweetObj, ...prev])
-      })
-
-      console.log(nweets)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   useEffect(() => {
-    getNweets()
+    firestoreService.collection('nweets').onSnapshot((snapshot) => {
+      const nweetsArr = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }))
+      setNweets(nweetsArr)
+    })
   }, [])
 
   const handleChange = (event) => {
@@ -39,8 +27,9 @@ const Home = () => {
     event.preventDefault()
     try {
       await firestoreService.collection('nweets').add({
-        nweet,
+        text: nweet,
         createAt: Date.now(),
+        creatorId: user.uid,
       })
       setNweet('')
     } catch (error) {
@@ -64,7 +53,7 @@ const Home = () => {
       <div>
         {nweets.map((item) => (
           <div key={item.id}>
-            <h4>{item.data.nweet}</h4>
+            <h4>{item.text}</h4>
           </div>
         ))}
       </div>
