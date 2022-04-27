@@ -37,17 +37,21 @@ const Nweet = ({ nweetObj, isOwner }) => {
     <div>
       {editing ? (
         <>
-          <form onSubmit={handleSubmit}>
-            <input
-              value={newNweet}
-              onChange={handleChange}
-              placeholder='Edit your nweet'
-              type='text'
-              required
-            />
-            <input type='submit' value='Update' />
-          </form>
-          <button onClick={toggleEditing}>Cancel</button>
+          {isOwner && (
+            <>
+              <form onSubmit={handleSubmit}>
+                <input
+                  value={newNweet}
+                  onChange={handleChange}
+                  placeholder='Edit your nweet'
+                  type='text'
+                  required
+                />
+                <input type='submit' value='Update' />
+              </form>
+              <button onClick={toggleEditing}>Cancel</button>
+            </>
+          )}
         </>
       ) : (
         <>

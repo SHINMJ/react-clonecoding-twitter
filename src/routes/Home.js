@@ -7,6 +7,7 @@ const Home = ({ user }) => {
   const [nweets, setNweets] = useState([])
 
   useEffect(() => {
+    // firestore의 변화를 감지
     firestoreService.collection('nweets').onSnapshot((snapshot) => {
       const nweetsArr = snapshot.docs.map((doc) => ({
         id: doc.id,
