@@ -7,6 +7,8 @@ import React, {
 } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { storageService } from 'myFirebase'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus, faTimes } from '@fortawesome/free-solid-svg-icons'
 
 const Attachment = ({ user, label = 'upload', url = '' }, ref) => {
   const [attachment, setAttachment] = useState(url)
@@ -60,24 +62,38 @@ const Attachment = ({ user, label = 'upload', url = '' }, ref) => {
   }
 
   return (
-    <div>
+    <>
+      <label htmlFor='attach-file' className='factoryInput__label'>
+        <span>{label}</span>
+        <FontAwesomeIcon icon={faPlus} />
+      </label>
       <input
+        id='attach-file'
         ref={fileInputRef}
         type='file'
         accept='image/*'
         multiple={false}
         onChange={handleFileChange}
-        hidden
+        style={{
+          opacity: 0,
+        }}
       />
-      <button onClick={handleClick}>{label}</button>
 
       {attachment && (
-        <div>
-          <img src={attachment} width='50px' height='50px' />
-          <button onClick={handleClearPhoto}>clear photo</button>
+        <div className='factoryForm__attachment'>
+          <img
+            src={attachment}
+            style={{
+              backgroundImage: attachment,
+            }}
+          />
+          <div className='factoryForm__clear' onClick={handleClearPhoto}>
+            <span>Remove</span>
+            <FontAwesomeIcon icon={faTimes} />
+          </div>
         </div>
       )}
-    </div>
+    </>
   )
 }
 

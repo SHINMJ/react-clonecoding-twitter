@@ -20,7 +20,6 @@ const Home = ({ user }) => {
 
   return (
     <div>
-      <h2>Home</h2>
       <NweetFactory user={user} />
 
       <div>

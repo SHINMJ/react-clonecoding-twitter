@@ -1,5 +1,7 @@
 import { firestoreService, storageService } from 'myFirebase'
 import React, { useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash, faPencilAlt } from '@fortawesome/free-solid-svg-icons'
 
 const Nweet = ({ nweetObj, isOwner }) => {
   const [editing, setEditing] = useState(false)
@@ -36,36 +38,42 @@ const Nweet = ({ nweetObj, isOwner }) => {
   }
 
   return (
-    <div>
+    <div className='nweet'>
       {editing ? (
         <>
           {isOwner && (
             <>
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit} className='container nweetEdit'>
                 <input
                   value={newNweet}
                   onChange={handleChange}
                   placeholder='Edit your nweet'
                   type='text'
                   required
+                  className='formInput'
+                  autoFocus
                 />
-                <input type='submit' value='Update' />
+                <input type='submit' value='Update' className='formBtn' />
               </form>
-              <button onClick={toggleEditing}>Cancel</button>
+              <button onClick={toggleEditing} className='formBtn cancelBtn'>
+                Cancel
+              </button>
             </>
           )}
         </>
       ) : (
         <>
           <h4>{nweetObj.text}</h4>
-          {nweetObj.attachmentUrl && (
-            <img src={nweetObj.attachmentUrl} width='50px' height='50px' />
-          )}
+          {nweetObj.attachmentUrl && <img src={nweetObj.attachmentUrl} />}
           {isOwner && (
-            <>
-              <button onClick={handleDelete}>Delete</button>
-              <button onClick={toggleEditing}>Edit</button>
-            </>
+            <div class='nweet__actions'>
+              <span onClick={handleDelete}>
+                <FontAwesomeIcon icon={faTrash} />
+              </span>
+              <span onClick={toggleEditing}>
+                <FontAwesomeIcon icon={faPencilAlt} />
+              </span>
+            </div>
           )}
         </>
       )}

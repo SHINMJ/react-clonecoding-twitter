@@ -1,5 +1,11 @@
 import { firebaseInstance, authService } from 'myFirebase'
 import React, { useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faTwitter,
+  faGoogle,
+  faGithub,
+} from '@fortawesome/free-brands-svg-icons'
 
 const SocailForm = ({ setError }) => {
   const handleSocialLogin = async (event) => {
@@ -24,14 +30,14 @@ const SocailForm = ({ setError }) => {
     }
   }
   return (
-    <>
-      <button name='google' onClick={handleSocialLogin}>
-        Continue with Google
+    <div className='authBtns'>
+      <button name='google' onClick={handleSocialLogin} className='authBtn'>
+        Continue with Google <FontAwesomeIcon icon={faGoogle} />
       </button>
-      <button name='github' onClick={handleSocialLogin}>
-        Continue with Github
+      <button name='github' onClick={handleSocialLogin} className='authBtn'>
+        Continue with Github <FontAwesomeIcon icon={faGithub} />
       </button>
-    </>
+    </div>
   )
 }
 

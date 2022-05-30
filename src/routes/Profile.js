@@ -56,24 +56,36 @@ const Profile = ({ user, refreshUser }) => {
 
   return (
     <>
-      <h2>profile</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type='text'
-          placeholder='Display Name'
-          text={newDisplayName}
-          onChange={handleDisplayNameChange}
-        />
+      <form onSubmit={handleSubmit} className='profileForm'>
+        <div className='container'>
+          <input
+            type='text'
+            placeholder='Display Name'
+            text={newDisplayName}
+            onChange={handleDisplayNameChange}
+            className='formInput'
+            autoFocus
+          />
 
-        <Attachment
-          user={user}
-          ref={attachmentRef}
-          label='add Profile Photo'
-          url={newPhotoUrl}
-        />
-        <input type='submit' value='update profile' />
+          <Attachment
+            user={user}
+            ref={attachmentRef}
+            label='add Profile Photo'
+            url={newPhotoUrl}
+          />
+          <input
+            type='submit'
+            value='update profile'
+            className='formBtn'
+            style={{
+              marginTop: 10,
+            }}
+          />
+          <span className='formBtn cancelBtn logOut' onClick={handleLogout}>
+            Log Out
+          </span>
+        </div>
       </form>
-      <button onClick={handleLogout}>Logout</button>
     </>
   )
 }
