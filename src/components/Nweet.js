@@ -1,4 +1,4 @@
-import { firestoreService } from 'myFirebase'
+import { firestoreService, storageService } from 'myFirebase'
 import React, { useState } from 'react'
 
 const Nweet = ({ nweetObj, isOwner }) => {
@@ -9,6 +9,8 @@ const Nweet = ({ nweetObj, isOwner }) => {
     const ok = window.confirm('Are you sure you want to delete this nweet?')
 
     if (ok) {
+      await storageService.refFromURL(nweetObj.attachmentUrl).delete()
+
       await firestoreService.doc(`nweets/${nweetObj.id}`).delete()
     }
   }
@@ -56,6 +58,9 @@ const Nweet = ({ nweetObj, isOwner }) => {
       ) : (
         <>
           <h4>{nweetObj.text}</h4>
+          {nweetObj.attachmentUrl && (
+            <img src={nweetObj.attachmentUrl} width='50px' height='50px' />
+          )}
           {isOwner && (
             <>
               <button onClick={handleDelete}>Delete</button>
