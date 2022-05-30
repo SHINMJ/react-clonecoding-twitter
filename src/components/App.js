@@ -11,16 +11,32 @@ function App() {
   useEffect(() => {
     authService.onIdTokenChanged((userObj) => {
       if (userObj) {
-        setUser(userObj)
+        setUserObj(userObj)
       }
       setInit(true)
     })
   }, [])
 
+  const refreshUser = () => {
+    setUserObj(authService.currentUser)
+  }
+
+  const setUserObj = (currentUser) => {
+    setUser({
+      displayName: currentUser.displayName,
+      uid: currentUser.uid,
+      updateProfile: (args) => currentUser.updateProfile(args),
+    })
+  }
+
   return (
     <>
       {init ? (
-        <AppRouter isLoggedIn={Boolean(user)} user={user} />
+        <AppRouter
+          refreshUser={refreshUser}
+          isLoggedIn={Boolean(user)}
+          user={user}
+        />
       ) : (
         'initialize....'
       )}
