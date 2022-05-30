@@ -22,9 +22,11 @@ function App() {
   }
 
   const setUserObj = (currentUser) => {
+    console.log(currentUser.photoURL)
     setUser({
       displayName: currentUser.displayName,
       uid: currentUser.uid,
+      photoURL: currentUser.photoURL,
       updateProfile: (args) => currentUser.updateProfile(args),
     })
   }

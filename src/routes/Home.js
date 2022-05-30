@@ -1,12 +1,12 @@
+import Attachment from 'components/Attachment'
 import Nweet from 'components/Nweet'
-import { firestoreService, storageService } from 'myFirebase'
-import React, { useEffect, useState } from 'react'
-import { v4 as uuidv4 } from 'uuid'
+import { firestoreService } from 'myFirebase'
+import React, { useEffect, useRef, useState } from 'react'
 
 const Home = ({ user }) => {
   const [nweet, setNweet] = useState('')
   const [nweets, setNweets] = useState([])
-  const [attachment, setAttachment] = useState('')
+  const attachmentRef = useRef()
 
   useEffect(() => {
     // firestore의 변화를 감지
@@ -29,22 +29,8 @@ const Home = ({ user }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault()
-    let attachmentUrl = ''
 
-    if (attachment != '') {
-      const attachmentRef = storageService
-        .ref()
-        .child(`${user.uid}/${uuidv4()}`)
-      try {
-        const result = await attachmentRef.putString(attachment, 'data_url')
-
-        if (result) {
-          attachmentUrl = await result.ref.getDownloadURL()
-        }
-      } catch (error) {
-        console.log(error)
-      }
-    }
+    const attachmentUrl = await attachmentRef.current.upload()
 
     try {
       const nweetObj = {
@@ -55,31 +41,9 @@ const Home = ({ user }) => {
       }
       await firestoreService.collection('nweets').add(nweetObj)
       setNweet('')
-      setAttachment('')
     } catch (error) {
       console.log(error)
     }
-  }
-
-  const handleFileChange = (event) => {
-    const {
-      target: { files },
-    } = event
-
-    const theFile = files[0]
-    const reader = new FileReader()
-    reader.onloadend = (finishedEvent) => {
-      const { currentTarget } = finishedEvent
-      setAttachment(currentTarget.result)
-    }
-
-    reader.readAsDataURL(theFile)
-    console.log(theFile)
-  }
-
-  const handleClearPhoto = (event) => {
-    event.preventDefault()
-    setAttachment(null)
   }
 
   return (
@@ -93,19 +57,8 @@ const Home = ({ user }) => {
           placeholder="What's on your mind?"
           maxLength={120}
         />
-        <input
-          type='file'
-          accept='image/*'
-          multiple={false}
-          onChange={handleFileChange}
-        />
+        <Attachment user={user} ref={attachmentRef} label='add Photo' />
         <input type='submit' value='Nweet' />
-        {attachment && (
-          <div>
-            <img src={attachment} width='50px' height='50px' />
-            <button onClick={handleClearPhoto}>clear photo</button>
-          </div>
-        )}
       </form>
 
       <div>
