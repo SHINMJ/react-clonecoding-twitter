@@ -1,6 +1,6 @@
 import React from 'react'
 import { authService } from 'myFirebase'
-import { useHistory } from 'react-router'
+import { useHistory } from 'react-router-dom'
 
 const Profile = () => {
   const history = useHistory()
