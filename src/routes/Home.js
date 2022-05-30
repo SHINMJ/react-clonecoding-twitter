@@ -1,12 +1,11 @@
 import Attachment from 'components/Attachment'
+import NweetFactory from 'components/NweetFactory'
 import Nweet from 'components/Nweet'
 import { firestoreService } from 'myFirebase'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const Home = ({ user }) => {
-  const [nweet, setNweet] = useState('')
   const [nweets, setNweets] = useState([])
-  const attachmentRef = useRef()
 
   useEffect(() => {
     // firestore의 변화를 감지
@@ -19,47 +18,10 @@ const Home = ({ user }) => {
     })
   }, [])
 
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event
-
-    setNweet(value)
-  }
-
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-
-    const attachmentUrl = await attachmentRef.current.upload()
-
-    try {
-      const nweetObj = {
-        text: nweet,
-        createAt: Date.now(),
-        creatorId: user.uid,
-        attachmentUrl,
-      }
-      await firestoreService.collection('nweets').add(nweetObj)
-      setNweet('')
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
   return (
     <div>
       <h2>Home</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type='text'
-          value={nweet}
-          onChange={handleChange}
-          placeholder="What's on your mind?"
-          maxLength={120}
-        />
-        <Attachment user={user} ref={attachmentRef} label='add Photo' />
-        <input type='submit' value='Nweet' />
-      </form>
+      <NweetFactory user={user} />
 
       <div>
         {nweets.map((item) => (

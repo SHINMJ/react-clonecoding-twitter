@@ -12,6 +12,8 @@ function App() {
     authService.onIdTokenChanged((userObj) => {
       if (userObj) {
         setUserObj(userObj)
+      } else {
+        setUser(null)
       }
       setInit(true)
     })
